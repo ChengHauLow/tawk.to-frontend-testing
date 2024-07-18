@@ -1,0 +1,62 @@
+@import './mixin.scss';
+.home{
+    #searchData {
+        width: 100%;
+        height: 100%;
+        @include flexBox-all-center-horizontal;
+        #searchForm{
+            width: 90%;
+            max-width: 680px;
+            margin: 0 auto;
+            @include flexBox-all-center-horizontal;
+            input{
+                width: 100%;
+                height: 40px;
+                border: solid 1px #eeeeee;
+                outline: 0;
+                padding: 0 20px;
+            }
+            button[type=submit]{
+                @include flexBox-all-center-horizontal;
+                width: 55px;
+                height: 40px;
+                border: none;
+                outline: 0;
+                svg{
+                    width: 15px;
+                }
+            }
+        }
+    }
+    
+    #listOfCategory{
+        width: 90%;
+        max-width: 1300px;
+        margin: 40px auto;
+        min-height: 600px;
+        background: #dddddd;
+        padding: 20px;
+        @include gridBox(3, 20px);
+        .categoryItem{
+            width: 100%;
+            background: #ffffff;
+            padding: 10px 0;
+            @include flexBox-all-center-vertical;
+            .itemIcon{
+                img{
+                    width: 50px;
+                }
+            }
+            .itemTitle{
+                font-size: 1rem;
+                text-align: center;
+            }
+            .itemNoArticle{
+                font-size: smaller;
+            }
+            .itemDate{
+                font-size: smaller;
+            }
+        }
+    }
+}

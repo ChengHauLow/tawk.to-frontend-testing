@@ -1,0 +1,19 @@
+@mixin flexBox-all-center-horizontal{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+@mixin flexBox-all-center-vertical{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+@mixin gridBox($columns: 1, $gap: 0){
+    display: grid;
+    grid-template-columns: repeat($columns, 1fr);
+    gap: $gap;
+    place-content: center;
+    place-items: center;
+}
