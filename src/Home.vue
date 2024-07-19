@@ -11,14 +11,17 @@
 				</button>
 			</form>
 		</div>
-		<div id="listOfCategory">
+		<div id="listOfCategory" v-if="categories.length > 0">
 			<div class="categoryItem" v-for="item in categories" v-if="item.totalArticle > 0" :key="item.id">
 				<div class="itemIcon">
 					<img :src="pngs[item.icon]" :alt="item.title" width="50px">
 				</div>
 				<h2 class="itemTitle">{{ item.title }}</h2>
-				<h4 class="itemNoArticle">{{ item.totalArticle }} article{{ item.totalArticle > 1 ? 's' : '' }}</h4>
-				<h4 class="itemDate">{{ compareDate(item.updatedOn)}}</h4>
+
+				<div class="itemMeta">
+					<span class="itemNoArticle">{{ item.totalArticle }} article{{ item.totalArticle > 1 ? 's' : '' }}</span>
+					<span class="itemDate">{{ compareDate(item.updatedOn)}}</span>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -41,79 +44,7 @@ export default {
 				'comment':'/assets/images/comment.png',
 				'shopping-cart':'/assets/images/shopping-cart.png'
 			},
-			categories:[
-				{
-					"id" : "cat1",
-					"title" : "Getting Started",
-					"description" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis massa ac augue tristique sagittis.",
-					"createdOn": "2019-12-11T03:01:52.849Z",
-					"updatedOn": "2019-12-11T03:02:10.297Z",
-					"enabled": true,
-					"order": 1,
-					"icon": "play",
-					"totalArticle" : 10
-				}, {
-					"id" : "cat2",
-					"title" : "Chat Widget Customization",
-					"description" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis massa ac augue tristique sagittis.",
-					"createdOn": "2019-12-13T11:20:48.057Z",
-					"updatedOn": "2019-12-13T11:22:31.745Z",
-					"enabled": true,
-					"order": 2,
-					"icon": "comment",
-					"totalArticle" : 10
-				}, {
-					"id" : "cat3",
-					"title" : "Using the Dashboard",
-					"description" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis massa ac augue tristique sagittis.",
-					"createdOn": "2019-12-16T14:10:46.604Z",
-					"updatedOn": "2019-12-16T14:11:04.658Z",
-					"enabled": true,
-					"order": 3,
-					"icon": "desktop",
-					"totalArticle" : 20
-				}, {
-					"id" : "cat4",
-					"title" : "Integrations",
-					"description" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis massa ac augue tristique sagittis.",
-					"createdOn": "2019-12-16T14:11:01.982Z",
-					"updatedOn": "2019-12-16T14:14:29.954Z",
-					"enabled": true,
-					"order": 5,
-					"icon": "link",
-					"totalArticle" : 15
-				}, {
-					"id" : "cat5",
-					"title" : "Advanced Features",
-					"description" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis massa ac augue tristique sagittis.",
-					"createdOn": "2019-12-18T09:22:22.661Z",
-					"updatedOn": "2019-12-18T09:54:35.029Z",
-					"enabled": true,
-					"order": 4,
-					"icon": "gem",
-					"totalArticle" : 5
-				}, {
-					"id" : "cat6",
-					"title" : "Javascript API",
-					"description" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis massa ac augue tristique sagittis.",
-					"createdOn": "2019-12-19T08:18:42.302Z",
-					"updatedOn": "2019-12-19T08:19:12.579Z",
-					"enabled": false,
-					"order": 6,
-					"icon": "code",
-					"totalArticle" : 0
-				}, {
-					"id" : "cat7",
-					"title" : "E-commerce Integrations",
-					"description" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis massa ac augue tristique sagittis.",
-					"createdOn": "2019-12-19T09:56:05.344Z",
-					"updatedOn": "2019-12-19T09:56:48.796Z",
-					"enabled": true,
-					"order": 7,
-					"icon": "shopping-cart",
-					"totalArticle" : 5
-				}
-			]
+			categories: []
 		}
 	},
 	methods:{
@@ -127,10 +58,25 @@ export default {
 		},
 		parseSvg(svgString){
 			return convertSvgTo64BaseData(svgString);
+		},
+		async getAllCategories(){
+			try {
+				let res = await fetch('/api/categories');
+				if(res.ok){
+					this.categories = await res.json();
+				}else{
+					this.categories = [];
+				}
+			} catch (error) {
+				console.error(error);
+				this.categories = [];
+			}
 		}
 	},
 	mounted() {
-		// mounted
+		// Change categories order
+		this.categories = this.categories.sort((a, b) => a.order - b.order);
+		this.getAllCategories();
 	}
 }
 </script>

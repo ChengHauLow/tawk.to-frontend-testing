@@ -10,9 +10,9 @@
     align-items: center;
 }
 
-@mixin gridBox($columns: 1, $gap: 0){
+@mixin gridBox($columns: 1, $gap: 0, $width: 1fr){
     display: grid;
-    grid-template-columns: repeat($columns, 1fr);
+    grid-template-columns: repeat($columns, $width);
     gap: $gap;
     place-content: center;
     place-items: center;
