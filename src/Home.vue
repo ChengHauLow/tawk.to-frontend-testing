@@ -13,15 +13,17 @@
 		</div>
 		<div id="listOfCategory" v-if="categories.length > 0">
 			<div class="categoryItem" v-for="item in categories" v-if="item.totalArticle > 0" :key="item.id">
-				<div class="itemIcon">
-					<img :src="pngs[item.icon]" :alt="item.title" width="50px">
-				</div>
-				<h2 class="itemTitle">{{ item.title }}</h2>
-
-				<div class="itemMeta">
-					<span class="itemNoArticle">{{ item.totalArticle }} article{{ item.totalArticle > 1 ? 's' : '' }}</span>
-					<span class="itemDate">{{ compareDate(item.updatedOn)}}</span>
-				</div>
+				<a :href="`/#/category/${item.id}`">
+					<div class="itemIcon">
+						<img :src="pngs[item.icon]" :alt="item.title" width="50px">
+					</div>
+					<h2 class="itemTitle">{{ item.title }}</h2>
+	
+					<div class="itemMeta">
+						<span class="itemNoArticle">{{ item.totalArticle }} article{{ item.totalArticle > 1 ? 's' : '' }}</span>
+						<span class="itemDate">{{ compareDate(item.updatedOn)}}</span>
+					</div>
+				</a>
 			</div>
 		</div>
 	</div>
@@ -55,9 +57,6 @@ export default {
 			}else if(diff > 11){
 				return `Last update ${parseInt(diff/12)} year${parseInt(diff/12 > 1)?'s':''} and ${diff%12} months ago`
 			}
-		},
-		parseSvg(svgString){
-			return convertSvgTo64BaseData(svgString);
 		},
 		async getAllCategories(){
 			try {
