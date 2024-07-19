@@ -1,8 +1,8 @@
 <template>
 	<div class="category">
 		<div id="cat-searchData">
-			<form id="cat-searchForm">
-				<input type="search" name="searchData" placeholder="Search for answers" id="cat-searchInput">
+			<form id="cat-searchForm" @submit="handleCatSubmit">
+				<input type="search" name="searchData" v-model="searchData" placeholder="Search for answers" id="cat-searchInput">
 				<button type="submit" id="cat-searchButton">
 					<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path fill-rule="evenodd" clip-rule="evenodd" d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -13,13 +13,15 @@
 		</div>
 		<div id="categoryDetails">
 			<div class="allViews">
-				<a href="/#/">All categories</a> <span class="seperate"><img src="/assets/images/Next Icon.png" alt=""></span> <span class="currentView">{{ currentCategory[0].title }}</span>
+				<a href="/#/">All categories</a> <span class="seperate"><img src="/assets/images/Next Icon.png" alt=""></span> <span v-if="currentCategory.length > 0" class="currentView">{{ currentCategory[0].title }}</span>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+import { setStore } from './utils/utils';
+
 export default {
 	data() {
 		return {
@@ -35,7 +37,8 @@ export default {
 				'shopping-cart':'/assets/images/shopping-cart.png'
 			},
 			categoryArticles: [],
-			currentCategory: []
+			currentCategory: [],
+			searchData:''
 		}
 	},
 	methods:{
@@ -52,6 +55,11 @@ export default {
 				console.error(error);
 				this.categoryArticles = [];
 			}
+		},
+		handleCatSubmit(e){
+			e.preventDefault();
+			setStore('searchData', this.searchData);
+			this.$router.push(`/`)
 		},
 		async getAllCategories(id){
 			try {

@@ -9,3 +9,17 @@ export const convertSvgTo64BaseData = (svgIcon)=>{
     // Create the data URL
     return `data:image/svg+xml;base64,${base64Encoded}`;
 }
+
+export const getStore = (k='') => {
+    return localStorage.getItem(k);
+}
+export const setStore = (k='', v='') => {
+    localStorage.setItem(k, v);
+}
+
+export const removeStore = (k='')=>{
+    localStorage.removeItem(k)
+}
+export const removeAllItems = ()=>{
+    localStorage.clear();
+}
