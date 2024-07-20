@@ -1,6 +1,8 @@
 @import './mixin.scss';
 @import './variables.scss';
 .category{
+    max-height: 740px;
+    overflow: hidden;
     #cat-searchData {
         width: 100%;
         height: 100%;
@@ -41,30 +43,152 @@
         margin: 40px auto;
         min-height: 600px;
         background: #FAFAFA;
-        padding: 20px;
-        @include flexBox(column, flex-start, center);
-        .allViews{
-            width: calc(100% - 120px);
-            margin-top: 10px;
-            text-align: left;
-            .seperate{
-                margin: 0 5px;
+        @include flexBox(row, flex-start, flex-start);
+        .catetgoryDetail{
+            padding: 20px;
+            @include flexBox(column, flex-start, flex-start);
+            width: 40%;
+            height: 100%;
+            min-height: 600px;
+            .allViews{
+                width: calc(100% - 120px);
+                margin-top: 10px;
+                margin-left: 40px;
+                text-align: left;
+                .seperate{
+                    margin: 0 5px;
+                }
+                span{
+                    color: $text-gray;
+                }
+                a{
+                    color: $green;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    text-decoration: none;
+                    cursor: pointer;
+                    &:hover{
+                        text-decoration: underline;
+                    }
+                }
             }
-            span{
-                color: $text-gray;
+            @media screen and (max-width: 1280px) {
+                width: 100%;
             }
-            a{
-                color: $green;
-                font-size: 1rem;
-                font-weight: 600;
+            .categoryItem{
+                max-width: 315px;
+                width: 100%;
+                margin: 40px;
+                border: 1px solid #EEEEEE;
+                border-radius: 4px;
+                width: 100%;
                 text-decoration: none;
-                cursor: pointer;
-                &:hover{
-                    text-decoration: underline;
+                color: $text-black;
+                @include flexBox-all-center-vertical;
+                max-width: 280px;
+                background: #ffffff;
+                height: 100%;
+                padding: 15px 0;
+                min-height: 250px;
+                @include flexBox-all-center-vertical;
+                .itemIcon{
+                    img{
+                        width: 50px;
+                        margin: 20px 0 10px;
+                    }
+                }
+                .itemMeta{
+                    width: 100%;
+                    font-size: 13px;
+                    @include flexBox-all-center-vertical;
+                    .itemTitle{
+                        font-size: 1rem;
+                        text-align: center;
+                        margin: 5px 0;
+                        color: $text-black;
+                    }
+                    .itemDate{
+                        color: $text-gray;
+                    }
+                }
+                .moreInfo{
+                    width: 100%;
+                    border-top: #EEEEEE 1px solid;
+                    padding-top: 15px;
+                    margin: 15px 0;
+                    @include flexBox-all-center-vertical;
+                    .infoText{
+                        width: 100%;
+                        font-size: 13px;
+                        color: $text-gray;
+                        padding: 10px 20px;
+                        text-align: center;
+                    }
+                }
+            }
+            @media screen and (max-width: 300px) {
+                .categoryItem{
+                    .itemMeta{
+                        font-size: 10px;
+                    }
+                    .itemTitle{
+                        font-size: 0.9rem;
+                    }
                 }
             }
         }
-        @media screen and (max-width: 1280px) {
+        .categoryArticles{
+            width: 60%;
+            margin-top: 90px;
+            max-height: 550px;
+            overflow-y: auto;
+            &::-webkit-scrollbar{
+                position: fixed;
+                width: 8px;
+                background: transparent;
+                position: absolute;
+                left: 0;
+                top: 0;
+              }
+            &::-webkit-scrollbar-thumb{
+                background: transparent;
+                border-radius: 10px;
+                transition: background 0.3s ease;
+            }
+            
+            &:hover{
+                &::-webkit-scrollbar-thumb{
+                background: #ccc;
+                }
+            }
+            .articleItem{
+                width: 90%;
+                max-width: 640px;
+                padding: 10px 40px;
+                height: 91.54px;
+                border: 1px solid #eeeeee;
+                background: #ffffff;
+                margin-bottom: 20px;
+                @include flexBox(row, flex-start, center);
+                .itemIcon{
+                    margin-right: 30px;
+                }
+                .itemMeta{
+                    .itemTitle{
+                        font-size: 1.1rem;
+                        text-align: left;
+                        margin: 5px 0;
+                        color: $text-black;
+                        font-weight: 600;
+                        text-decoration: none;
+                    }
+                    .itemDate{
+                        color: $text-gray;
+                    }
+                }
+            }
+        }
+        @media screen and (max-width: 1300px){
             width: 100%;
         }
     }

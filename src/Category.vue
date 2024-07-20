@@ -12,8 +12,39 @@
 			</form>
 		</div>
 		<div id="categoryDetails">
-			<div class="allViews">
-				<a href="/#/">All categories</a> <span class="seperate"><img src="/assets/images/Next Icon.png" alt=""></span> <span v-if="currentCategory.length > 0" class="currentView">{{ currentCategory[0].title }}</span>
+			<div class="catetgoryDetail">
+				<div class="allViews">
+					<a href="/#/">All categories</a> <span class="seperate"><img src="/assets/images/Next Icon.png" alt=""></span> <span v-if="currentCategory.length > 0" class="currentView">{{ currentCategory[0].title }}</span>
+				</div>
+				<div class="categoryItem" v-if="currentCategory.length > 0">
+					<div class="itemIcon">
+						<img :src="pngs[currentCategory[0].icon]" :alt="currentCategory[0].title" width="50px">
+					</div>
+					
+					<div class="itemMeta">
+						<h2 class="itemTitle">{{ currentCategory[0].title }}</h2>
+						<span class="itemDate">{{ compareDate(currentCategory[0].updatedOn)}}</span>
+					</div>
+					<div class="moreInfo">
+						<div class="infoIcon">
+							<img src="/assets/images/info.png" alt="info" width="20px" height="19.9px">
+						</div>
+						<p class="infoText">
+							{{ currentCategory[0].description }}
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="categoryArticles">
+				<div class="articleItem" v-for="article in categoryArticles" :key="article.id">
+					<div class="itemIcon">
+						<img src="/assets/images/file-text.png" :alt="article.title" width="16px" height="19.9px">
+					</div>
+					<div class="itemMeta">
+						<h2 class="itemTitle">{{ article.title }}</h2>
+						<span class="itemDate">{{ compareDate(article.updatedOn)}}</span>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -21,7 +52,7 @@
 
 <script>
 import { setStore } from './utils/utils';
-
+import moment from 'moment';
 export default {
 	data() {
 		return {
@@ -46,7 +77,8 @@ export default {
 			try {
 				let res = await fetch('/api/category/'+id);
 				if(res.ok){
-					this.categoryArticles = await res.json();
+					let allArticles = await res.json();
+					this.categoryArticles = allArticles.filter(article=> article.status == 'published');
 					console.log(this.categoryArticles);
 				}else{
 					this.categoryArticles = [];

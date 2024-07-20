@@ -17,6 +17,7 @@
                 outline: 0;
                 padding: 0 30px;
                 font-size: 1rem;
+                border-radius: 4px 0 0 4px;
             }
             button[type=submit]{
                 @include flexBox-all-center-horizontal;
@@ -25,6 +26,7 @@
                 border: none;
                 outline: 0;
                 background: $green;
+                border-radius: 0 4px 4px 0;
                 svg{
                     width: 18px;
                     color: white;
@@ -47,6 +49,8 @@
             max-width: 315px;
             width: 100%;
             a{
+                border: 1px solid #EEEEEE;
+                border-radius: 4px;
                 width: 100%;
                 text-decoration: none;
                 color: $text-black;
@@ -54,6 +58,7 @@
                 max-width: 315px;
                 background: #ffffff;
                 height: 100%;
+                padding: 10px 0;
                 min-height: 220px;
                 @include flexBox-all-center-vertical;
                 .itemIcon{
@@ -77,6 +82,16 @@
                     }
                     .itemDate{
                         color: $text-gray;
+                    }
+                }
+                .moreInfo{
+                    width: 100%;
+                    margin: 15px 0;
+                    @include flexBox-all-center-vertical;
+                    .infoText{
+                        width: 100%;
+                        padding: 10px;
+                        text-align: center;
                     }
                 }
             }
