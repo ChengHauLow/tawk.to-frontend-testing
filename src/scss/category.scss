@@ -224,6 +224,12 @@
                     }
                 }
             }
+            @media screen and (max-width: 510px) {
+                .allViews{
+                    text-align: center;
+                    margin-left: 0;
+                }
+            }
             @media screen and (max-width: 300px) {
                 .categoryItem{
                     .itemMeta{
