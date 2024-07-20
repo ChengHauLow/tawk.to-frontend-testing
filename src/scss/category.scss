@@ -1,8 +1,6 @@
 @import './mixin.scss';
 @import './variables.scss';
 .category{
-    max-height: 740px;
-    overflow: hidden;
     #cat-searchData {
         width: 100%;
         height: 100%;
@@ -24,6 +22,7 @@
                 @include flexBox-all-center-horizontal;
                 width: 80px;
                 height: 60px;
+                cursor: pointer;
                 border: none;
                 outline: 0;
                 background: $green;
@@ -36,11 +35,112 @@
             }
         }
     }
-    
+    .modal{
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        @include flexBox-all-center-horizontal;
+        background: rgba(0,0,0, 0.8);
+        z-index: 1;
+        .overlay{
+            position: absolute;
+            z-index: 0;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .contentWrap{
+            z-index: 9999999;
+            width: 100%;
+            padding: 5px 20px;
+            max-width: 600px;
+            border-radius: 4px;
+            background: #ffffff;
+            max-height: 400px;
+            box-shadow: 0 0 6px rgba(0,0,0, 0.8);
+            position: relative;
+            .closeBtn{
+                position: absolute;
+                font-size: 2rem;
+                top: 0px;
+                right: 10px;
+                color: $text-black;
+                cursor: pointer;
+            }
+            p{
+                &.content{
+                    max-height: 200px;
+                    font-size: 12px;
+                    margin: 5px 0;
+                    text-align: justify;
+                }
+            }
+            .title{
+                margin: 5px 0;
+                text-align: center;
+            }
+            .author, .lastUpdate{
+                margin: 5px 0;
+            }
+            @media screen and (max-width:424px) {
+                .title{
+                    font-size: 1.2rem;
+                }
+            }
+            @media screen and (max-width:340px) {
+                .title{
+                    font-size: 1rem;
+                }
+                .content{
+                    font-size: 10px;
+                }
+            }
+        }
+    }
+    .otherCats{
+        width: 100%;
+        min-height: 350px;
+        max-width: 1280px;
+        background: #FAFAFA;
+        margin: 0 auto 40px;
+        position: relative;
+        .navBtn{
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            @include flexBox-all-center-horizontal;
+            background: rgba(255,255,255, 0.8);
+            outline: 0;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+            cursor: pointer;
+            &:disabled{
+                filter: grayscale(1);
+            }
+            &.next{
+                right: 20px;
+            }
+            &.prev{
+                transform: rotate(180deg);
+                left: 20px;
+            }
+        }
+        @include gridBox(3, 20px, 335px);
+        @media screen and (max-width:1047px) {
+            @include gridBox(2, 20px, 335px);
+        }
+        @media screen and (max-width:691px) {
+            @include gridBox(1, 10px, 335px);
+        }
+        @media screen and (max-width:336px) {
+            @include gridBox(1, 10px, 1fr);
+        }
+    }
     #categoryDetails{
         width: 90%;
         max-width: 1280px;
-        margin: 40px auto;
+        margin: 40px auto 0;
         min-height: 600px;
         background: #FAFAFA;
         @include flexBox(row, flex-start, flex-start);
@@ -55,11 +155,13 @@
                 margin-top: 10px;
                 margin-left: 40px;
                 text-align: left;
+                min-width: 400px;
                 .seperate{
                     margin: 0 5px;
                 }
                 span{
                     color: $text-gray;
+                    white-space: nowrap;
                 }
                 a{
                     color: $green;
@@ -72,25 +174,21 @@
                     }
                 }
             }
-            @media screen and (max-width: 1280px) {
-                width: 100%;
-            }
             .categoryItem{
-                max-width: 315px;
-                width: 100%;
-                margin: 40px;
                 border: 1px solid #EEEEEE;
-                border-radius: 4px;
-                width: 100%;
+                @include flexBox-all-center-vertical;
                 text-decoration: none;
                 color: $text-black;
-                @include flexBox-all-center-vertical;
+                border-radius: 4px;
+                width: 100%;
+                margin: 40px;
                 max-width: 280px;
                 background: #ffffff;
                 height: 100%;
                 padding: 15px 0;
                 min-height: 250px;
                 @include flexBox-all-center-vertical;
+                position: relative;
                 .itemIcon{
                     img{
                         width: 50px;
@@ -169,6 +267,21 @@
                 border: 1px solid #eeeeee;
                 background: #ffffff;
                 margin-bottom: 20px;
+                position: relative;
+                cursor: pointer;
+                &::after{
+                    position: absolute;
+                    inset: 0;
+                    content: '';
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    background: transparent;
+                }
+                .arrow{
+                    position: absolute;
+                    right: 50px;
+                }
                 @include flexBox(row, flex-start, center);
                 .itemIcon{
                     margin-right: 30px;
@@ -190,6 +303,100 @@
         }
         @media screen and (max-width: 1300px){
             width: 100%;
+        }
+        @media screen and (max-width: 937px){
+            flex-direction: column;
+            align-items: center;
+            min-height: unset;
+            margin: 40px auto 0;
+            .catetgoryDetail{
+                min-height: unset;
+                width: 100%;
+                justify-content: flex-start;
+                align-items: center;
+            }
+            .categoryArticles{
+                width: 95%;
+                margin-top: 0;
+                .articleItem{
+                    justify-content: flex-start;
+                    margin: 0 auto 30px;
+                    max-width: unset;
+                    align-items: center;
+                }
+            }
+        }
+        @media screen and (max-width: 605px){
+            .categoryArticles{
+                .articleItem{
+                    padding: 10px 10px 10px 20px;
+                    margin: 0 auto 30px;
+                    max-width: unset;
+                    justify-content: flex-start;
+                    align-items: center;
+                    .arrow{
+                        position: absolute;
+                        right: 30px;
+                    }
+                    .itemIcon{
+                        margin-right: 30px;
+                    }
+                    .itemMeta{
+                        .itemTitle{
+                            font-size: 0.9rem;
+                        }
+                        .itemDate{
+                            font-size: 10px;
+                        }
+                    }
+                }
+            }
+
+        }
+        @media screen and (max-width: 404px){
+            .categoryArticles{
+                .articleItem{
+                    .arrow{
+                        right: 20px;
+                    }
+                    .itemIcon{
+                        margin-right: 20px;
+                    }
+                    .itemMeta{
+                        .itemTitle{
+                            font-size: 0.8rem;
+                        }
+                        .itemDate{
+                            font-size: 9px;
+                        }
+                    }
+                }
+            }
+
+        }
+        @media screen and (max-width: 365px){
+            .categoryArticles{
+                width: 100%;
+                padding: 5px 0;
+                .articleItem{
+                    width: 100%;
+                    .arrow{
+                        right: 15px;
+                    }
+                    .itemIcon{
+                        margin-right: 15px;
+                    }
+                    .itemMeta{
+                        .itemTitle{
+                            font-size: 0.7rem;
+                        }
+                        .itemDate{
+                            font-size: 8px;
+                        }
+                    }
+                }
+            }
+
         }
     }
 }

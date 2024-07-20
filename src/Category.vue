@@ -36,7 +36,7 @@
 				</div>
 			</div>
 			<div class="categoryArticles">
-				<div class="articleItem" v-for="article in categoryArticles" :key="article.id">
+				<div class="articleItem" v-for="article in categoryArticles" :key="article.id" @click="getDetail(article)">
 					<div class="itemIcon">
 						<img src="/assets/images/file-text.png" :alt="article.title" width="16px" height="19.9px">
 					</div>
@@ -44,7 +44,23 @@
 						<h2 class="itemTitle">{{ article.title }}</h2>
 						<span class="itemDate">{{ compareDate(article.updatedOn)}}</span>
 					</div>
+					<div class="arrow"><img src="/assets/images/Detailicon.png" alt="next" width="8.44px" height="16.79px"></div>
 				</div>
+			</div>
+		</div>
+		<div class="otherCats">
+			<CategoryItem v-for="item in slides" :pngs="pngs" v-if="slides.length >= 1" :catitem="item" :key="item.id" />
+			<button @click.prevent="getNext" class="navBtn next" :disabled="addSlide"><img src="/assets/images/Detailicon.png" alt="next" width="8.44px" height="16.79px"></button>
+			<button @click.prevent="getPrev" class="navBtn prev" :disabled="minusSlide"><img src="/assets/images/Detailicon.png" alt="next" width="8.44px" height="16.79px"></button>
+		</div>
+		<div class="modal" v-if="modalStatus">
+			<div class="overlay" @click="closeModal"></div>
+			<div class="contentWrap">
+				<span class="closeBtn" @click="closeModal">&times;</span>
+				<h2 class="title">{{ article.title }}</h2>
+				<h5 class="author">Author: {{ article.name }}</h5>
+				<h5 class="lastUpdate">{{ article.lastUpdate }}</h5>
+				<p class="content">{{ article.content }}</p>
 			</div>
 		</div>
 	</div>
@@ -53,7 +69,12 @@
 <script>
 import { setStore } from './utils/utils';
 import moment from 'moment';
+import CategoryItem from './components/CategoryItem.vue';
+
 export default {
+	components:{
+		CategoryItem
+	},
 	data() {
 		return {
 			// data
@@ -69,7 +90,16 @@ export default {
 			},
 			categoryArticles: [],
 			currentCategory: [],
-			searchData:''
+			searchData:'',
+			allCats:[],
+			slides:[],
+			total:0,
+			modalStatus:false,
+			start:0,
+			end:3,
+			addSlide: false,
+			minusSlide: true,
+			article:{}
 		}
 	},
 	methods:{
@@ -99,6 +129,10 @@ export default {
 				if(res.ok){
 					let allCategories = await res.json();
 					if(allCategories.length > 0){
+						this.allCats = allCategories.filter(category=>category.id != id && category.enabled);
+						this.total = this.allCats.length;
+						this.slides = this.getSlide(this.allCats)
+						console.log(this.slides, 'slides')
 						this.currentCategory = allCategories.filter(category=> category.id == id);
 						console.log(this.currentCategory);
 					}
@@ -113,17 +147,74 @@ export default {
 		compareDate(udpateDate=moment()){
 			let diff = moment().diff(udpateDate, 'months');
 			if(diff < 12){
-				return `Last update ${diff} months ago`
+				return `Last update: ${diff} months ago`
 			}else if(diff > 11){
-				return `Last update ${parseInt(diff/12)} year${parseInt(diff/12 > 1)?'s':''} and ${diff%12} months ago`
+				return `Last update: ${parseInt(diff/12)} year${parseInt(diff/12 > 1)?'s':''} and ${diff%12} months ago`
 			}
 		},
+		async getDetail(item){
+			let res = await fetch(`/api/author/${item.authorId}`)
+			if(res.ok){
+				let authorData = await res.json()
+				this.article = {
+					name: authorData.name,
+					lastUpdate:this.compareDate(item.updatedOn),
+					content: item.content,
+					title: item.title
+				};
+				console.log(this.article)
+				this.modalStatus = true;
+			}else{
+				return
+			}
+		},
+		closeModal(){
+			this.modalStatus = false;
+			this.article = {}
+		},
+		getSlide(list = [], start=0, end=3){
+			let showList = list.slice(start, start+end);
+			return showList;
+		},
+		getNext(){
+			if(this.start + this.end < this.total){
+				this.start += 1;
+			}
+			this.addSlide = this.start + this.end >= this.total;
+			this.minusSlide = this.start == 0
+			this.slides = this.getSlide(this.allCats, this.start, this.end);
+		},
+		getPrev(){
+			if(this.start > 0){
+				this.start -= 1;
+			}
+			this.addSlide = this.start + this.end >= this.total;
+			this.minusSlide = this.start == 0
+			this.slides = this.getSlide(this.allCats, this.start, this.end);
+		}
 	},
 	created() {
 		// Change categories order
 		// this.categoryArticles = this.categoryArticles.sort((a, b) => a.order - b.order);
 		this.getCategory(this.$route.params.id);
 		this.getAllCategories(this.$route.params.id);
+	},
+	mounted(){
+		const observe = new ResizeObserver((entries)=>{
+			if(entries[0].borderBoxSize[0].inlineSize > 1031){
+				this.end = 3
+				this.slides = this.getSlide(this.allCats, this.start, this.end)
+			}	
+			if(entries[0].borderBoxSize[0].inlineSize <= 1031){
+				this.end = 2
+				this.slides = this.getSlide(this.allCats, this.start, this.end)
+			}	
+			if(entries[0].borderBoxSize[0].inlineSize <= 675){
+				this.end = 1
+				this.slides = this.getSlide(this.allCats, this.start, this.end)
+			}	
+		})
+		observe.observe(document.querySelector('.category'))
 	}
 }
 </script>

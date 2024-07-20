@@ -12,7 +12,7 @@
 			</form>
 		</div>
 		<div id="listOfCategory">
-			<div class="categoryItem" v-for="item in displayList" v-if="item.totalArticle > 0 && displayList.length > 0" :key="item.id">
+			<!-- <div class="categoryItem" v-for="item in displayList" v-if="item.totalArticle > 0 && displayList.length > 0" :key="item.id">
 				<a :href="`/#/category/${item.id}`">
 					<div class="itemIcon">
 						<img :src="pngs[item.icon]" :alt="item.title" width="50px">
@@ -24,7 +24,8 @@
 						<span class="itemDate">{{ compareDate(item.updatedOn)}}</span>
 					</div>
 				</a>
-			</div>
+			</div> -->
+			<CategoryItem v-for="item in displayList" :pngs="pngs" :catitem="item" :key="item.id" />
 		</div>
 	</div>
 </template>
@@ -32,7 +33,12 @@
 <script>
 import moment from 'moment';
 import { getStore, removeStore } from './utils/utils.js';
+import CategoryItem from './components/CategoryItem.vue';
+
 export default {
+	components:{
+		CategoryItem
+	},
 	data() {
 		return {
 			// data
@@ -52,14 +58,6 @@ export default {
 		}
 	},
 	methods:{
-		compareDate(udpateDate=moment()){
-			let diff = moment().diff(udpateDate, 'months');
-			if(diff < 12){
-				return `Last update ${diff} months ago`
-			}else if(diff > 11){
-				return `Last update ${parseInt(diff/12)} year${parseInt(diff/12 > 1)?'s':''} and ${diff%12} months ago`
-			}
-		},
 		handleSubmit(e){
 			e.preventDefault();
 			
