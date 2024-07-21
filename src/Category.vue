@@ -48,6 +48,9 @@
 				</div>
 			</div>
 		</div>
+		<div class="otherCatsTitle">
+			<h3>Other Categories</h3>
+		</div>
 		<div class="otherCats">
 			<CategoryItem v-for="item in slides" :pngs="pngs" v-if="slides.length >= 1" :catitem="item" :key="item.id" />
 			<button @click.prevent="getNext" class="navBtn next" :disabled="addSlide"><img src="/assets/images/Detailicon.png" alt="next" width="8.44px" height="16.79px"></button>
