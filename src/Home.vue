@@ -60,8 +60,7 @@ export default {
 	methods:{
 		handleSubmit(e){
 			e.preventDefault();
-			
-			this.getAllCategories();
+			this.$router.push(`/search/${this.searchData}`)
 		},
 		handleChange(e){
 			if(this.searchData == ''){

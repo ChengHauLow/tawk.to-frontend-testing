@@ -14,28 +14,11 @@
 		<div id="categoryDetails">
 			<div class="catetgoryDetail">
 				<div class="allViews">
-					<a href="/#/">All categories</a> <span class="seperate"><img src="/assets/images/Next Icon.png" alt=""></span> <span v-if="currentCategory.length > 0" class="currentView">{{ currentCategory[0].title }}</span>
-				</div>
-				<div class="categoryItem" v-if="currentCategory.length > 0">
-					<div class="itemIcon">
-						<img :src="pngs[currentCategory[0].icon]" :alt="currentCategory[0].title" width="50px">
-					</div>
-					
-					<div class="itemMeta">
-						<h2 class="itemTitle">{{ currentCategory[0].title }}</h2>
-						<span class="itemDate">{{ compareDate(currentCategory[0].updatedOn)}}</span>
-					</div>
-					<div class="moreInfo">
-						<div class="infoIcon">
-							<img src="/assets/images/info.png" alt="info" width="20px" height="19.9px">
-						</div>
-						<p class="infoText">
-							{{ currentCategory[0].description }}
-						</p>
-					</div>
+					<a href="/#/">All categories</a> <span class="seperate"><img src="/assets/images/Next Icon.png" alt=""></span> <span class="currentView">Search Results</span>
 				</div>
 			</div>
-			<div class="categoryArticles">
+			<div class="categoryArticles" v-if="categoryArticles.length >= 1 && searchData != ''">
+				<h2 class="searchTitle">Showing results for "<span class="searchText">{{ searchData }}</span>"</h2>
 				<div class="articleItem" v-for="article in categoryArticles" :key="article.id" @click="getDetail(article)">
 					<div class="itemIcon">
 						<img src="/assets/images/file-text.png" :alt="article.title" width="16px" height="19.9px">
@@ -47,15 +30,17 @@
 					<div class="arrow"><img src="/assets/images/Detailicon.png" alt="next" width="8.44px" height="16.79px"></div>
 				</div>
 			</div>
+			<div class="noResult" v-else>
+				<img src="/assets/images/empty-search.svg" alt="no result" width="317px">
+				<p class="noResultText">
+					No search results
+				</p>
+				<p class="noResultText small">
+					Please, try again or <span class="submitTicket">Submit a ticket</span>
+				</p>
+			</div>
 		</div>
-		<div class="otherCatsTitle">
-			<h3>Other Categories</h3>
-		</div>
-		<div class="otherCats">
-			<CategoryItem v-for="item in slides" :pngs="pngs" v-if="slides.length >= 1" :catitem="item" :key="item.id" />
-			<button @click.prevent="getNext" class="navBtn next" :disabled="addSlide"><img src="/assets/images/Detailicon.png" alt="next" width="8.44px" height="16.79px"></button>
-			<button @click.prevent="getPrev" class="navBtn prev" :disabled="minusSlide"><img src="/assets/images/Detailicon.png" alt="next" width="8.44px" height="16.79px"></button>
-		</div>
+		
 		<div class="modal" v-if="modalStatus">
 			<div class="overlay" @click="closeModal"></div>
 			<div class="contentWrap">
@@ -121,10 +106,17 @@ export default {
 				this.categoryArticles = [];
 			}
 		},
-		handleCatSubmit(e){
+		async getResult(text){
+			let res = await fetch(`/api/search/${text}`)
+			if(res.ok){
+				let data = await res.json();
+				this.categoryArticles = data
+			}
+		},
+		async handleCatSubmit(e){
 			e.preventDefault();
-			
-			this.$router.push(`/search/${this.searchData}`)
+			console.log(this.searchData, 'this.searchData')
+			await getResult(this.searchData)
 		},
 		async getAllCategories(id){
 			try {
@@ -197,10 +189,11 @@ export default {
 		}
 	},
 	created() {
-		// Change categories order
-		// this.categoryArticles = this.categoryArticles.sort((a, b) => a.order - b.order);
-		this.getCategory(this.$route.params.id);
-		this.getAllCategories(this.$route.params.id);
+		// Get result from params
+		if(this.$route.params.text != undefined){
+			this.searchData = this.$route.params.text
+			this.getResult(this.searchData)
+		}
 	},
 	mounted(){
 		const observe = new ResizeObserver((entries)=>{
@@ -224,5 +217,5 @@ export default {
 
 <style lang="scss" scoped>
 	@import 'scss/main.scss';
-	@import 'scss/category.scss';
+	@import 'scss/search.scss';
 </style>
