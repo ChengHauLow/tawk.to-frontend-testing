@@ -107,6 +107,7 @@ export default {
 			}
 		},
 		async getResult(text){
+			this.categoryArticles = []
 			let res = await fetch(`/api/search/${text}`)
 			if(res.ok){
 				let data = await res.json();
